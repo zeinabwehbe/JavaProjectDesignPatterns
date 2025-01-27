@@ -1,10 +1,12 @@
 package view;
 
+import controller.ProductController;
+import controller.CategoryController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import controller.ProductController;
 import strategy.DiscountPriceStrategy;
 import strategy.PricingStrategy;
 import strategy.RegularPriceStrategy;
@@ -13,25 +15,25 @@ public class ProductView {
     private JPanel panel;
     private ProductController productController;
     private final CartView cartView;
+    private JComboBox<String> categoryDropdown;
 
-    public ProductView(ProductController productController, CartView cartView) {
+    public ProductView(ProductController productController, CartView cartView, CategoryController categoryController) {
         this.productController = productController;
         this.cartView = cartView;
-        panel = createProductFormPanel();
+        panel = createProductFormPanel(categoryController);
     }
 
     public JPanel getPanel() {
         return panel;
     }
 
-    private JPanel createProductFormPanel() {
+    private JPanel createProductFormPanel(CategoryController categoryController) {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(10, 2));
+        panel.setLayout(new GridLayout(4, 4));
         panel.setBackground(new Color(240, 240, 240));
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
         JTextField productIdField = new JTextField();
-        JTextField productCategoryField = new JTextField();
         JTextField productNameField = new JTextField();
         JTextField productStatusField = new JTextField();
         JTextField productPriceField = new JTextField();
@@ -41,7 +43,11 @@ public class ProductView {
         panel.add(productIdField);
 
         panel.add(createLabel("Product Category:"));
-        panel.add(productCategoryField);
+        categoryDropdown = new JComboBox<>();
+        for (var category : categoryController.getCategories()) {
+            categoryDropdown.addItem(category.getCategoryName());
+        }
+        panel.add(categoryDropdown);
 
         panel.add(createLabel("Product Name:"));
         panel.add(productNameField);
@@ -60,7 +66,7 @@ public class ProductView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String productId = productIdField.getText();
-                String productCategory = productCategoryField.getText();
+                String productCategory = (String) categoryDropdown.getSelectedItem();
                 String productName = productNameField.getText();
                 String productStatus = productStatusField.getText();
 

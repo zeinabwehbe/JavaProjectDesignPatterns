@@ -13,7 +13,7 @@ public class CategoryView {
     private JTextField categoryIdField;
     private JTextField categoryNameField;
     private JButton addCategoryButton;
-    private JTextArea displayArea;
+    private JComboBox<String> categoryDropdown;
 
     public CategoryView(CategoryController categoryController) {
         this.categoryController = categoryController;
@@ -40,9 +40,9 @@ public class CategoryView {
         addCategoryButton.addActionListener(new AddCategoryButtonListener());
         panel.add(addCategoryButton);
 
-        displayArea = new JTextArea();
-        displayArea.setEditable(false);
-        panel.add(new JScrollPane(displayArea));
+        panel.add(createLabel("Select Category:"));
+        categoryDropdown = new JComboBox<>();
+        panel.add(categoryDropdown);
     }
 
     private JLabel createLabel(String text) {
@@ -59,23 +59,18 @@ public class CategoryView {
         return button;
     }
 
-    public String getCategoryId() {
-        return categoryIdField.getText();
-    }
-
-    public String getCategoryName() {
-        return categoryNameField.getText();
-    }
-
-    public void setDisplayArea(String text) {
-        displayArea.setText(text);
+    public void updateDropdown() {
+        categoryDropdown.removeAllItems();
+        for (var category : categoryController.getCategories()) {
+            categoryDropdown.addItem(category.getCategoryName());
+        }
     }
 
     private class AddCategoryButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String categoryId = getCategoryId();
-            String categoryName = getCategoryName();
+            String categoryId = categoryIdField.getText();
+            String categoryName = categoryNameField.getText();
 
             if (categoryId.isEmpty() || categoryName.isEmpty()) {
                 JOptionPane.showMessageDialog(panel, "All fields must be filled out!");
@@ -83,13 +78,6 @@ public class CategoryView {
             }
 
             categoryController.addCategory(categoryId, categoryName);
-
-            // Update display area
-            StringBuilder displayText = new StringBuilder("Categories:\n");
-            for (var category : categoryController.getCategories()) {
-                displayText.append("ID: ").append(category.getCategoryId()).append(", Name: ").append(category.getCategoryName()).append("\n");
-            }
-            setDisplayArea(displayText.toString());
 
             // Clear fields
             categoryIdField.setText("");

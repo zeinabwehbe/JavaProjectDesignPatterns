@@ -1,14 +1,21 @@
 import controller.CartController;
+import controller.CategoryController;
 import controller.CustomerController;
 import controller.ProductController;
+import model.CategoryData;
 import model.CustomerData;
 import model.Cart;
 import view.CartView;
+import view.CategoryView;
 import view.CustomerView;
 import view.ProductView;
 
+import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ShoppingApplicationUI {
     private final JFrame frame;
@@ -18,15 +25,21 @@ public class ShoppingApplicationUI {
     private final CustomerView customerView;
     private JButton continueButton;
     private boolean isCustomerInfoSubmitted = false;
+    private final CategoryController categoryController;
 
     public ShoppingApplicationUI() {
         frame = new JFrame("Shopping Application");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(1000, 700);
 
         CustomerData customerData = new CustomerData();
         customerView = new CustomerView();
         customerController = new CustomerController(customerData, customerView);
+
+        // Initialize CategoryController with static categories
+        categoryController = new CategoryController();
+        CategoryView categoryView = new CategoryView(categoryController);
+        categoryController.setCategoryView(categoryView);
 
         frame.setContentPane(customerView.getPanel());
 
@@ -36,7 +49,7 @@ public class ShoppingApplicationUI {
 
     private void initializeCustomerInfoUI() {
         continueButton = createContinueButton();
-        frame.add(continueButton, BorderLayout.SOUTH);
+        frame.add(continueButton);
     }
 
     private JButton createContinueButton() {
@@ -60,29 +73,36 @@ public class ShoppingApplicationUI {
             return;
         }
 
+
         Cart cart = new Cart();
         cartController = new CartController(customer, cart, null); // Initialize without CartView first
         CartView cartView = new CartView(cartController); // Create CartView with cartController
         cartController.setCartView(cartView); // Update cartController with cartView
-        ProductView productView = new ProductView(null, cartView); // Temporary initialization, will be updated in ProductController
+        ProductView productView = new ProductView(null, cartView, categoryController); // Temporary initialization, will be updated in ProductController
         productController = new ProductController(cart, productView); // Initialize ProductController with Cart and ProductView
         productView.setProductController(productController); // Update ProductView with ProductController
         isCustomerInfoSubmitted = true;
 
         // Remove customerView and continueButton from the frame
-        frame.remove(customerView.getPanel());
+        //frame.remove(customerView.getPanel());
         frame.remove(continueButton);
-
         addProductAndCartViews(productView, cartView);
     }
-
     private void addProductAndCartViews(ProductView productView, CartView cartView) {
-        frame.add(productView.getPanel(), BorderLayout.NORTH);
-        frame.add(cartView.getPanel(), BorderLayout.CENTER);
+        frame.setLayout(new BorderLayout());
+
+        // Create a panel to hold both ProductView and CartView
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(productView.getPanel(), BorderLayout.NORTH);
+        bottomPanel.add(cartView.getPanel(), BorderLayout.CENTER);
+
+        // Add the combined panel to the bottom of the frame
+        frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.revalidate();
         frame.repaint();
     }
+
 
 
     public static void main(String[] args) {

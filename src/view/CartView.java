@@ -12,7 +12,7 @@ public class CartView {
     private DefaultTableModel tableModel;
     private JTable cartTable;
     private JLabel totalLabel;
-    private CartController cartController;
+    private final CartController cartController;
 
     public CartView(CartController cartController) {
         this.cartController = cartController;
@@ -84,9 +84,5 @@ public class CartView {
 
     private void checkout() {
         cartController.updateCart();
-    }
-
-    public void setCartController(CartController cartController) {
-        this.cartController = cartController;
     }
 }

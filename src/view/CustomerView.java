@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +33,13 @@ public class CustomerView {
     }
 
     private JPanel createCustomerFormPanel() {
-        JPanel panel = new JPanel(new GridLayout(0, 2));
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(28, 2, 0, 0));
         panel.setBackground(new Color(240, 240, 240));
+
+        // Add margins to the left and right
+        panel.setBorder(new EmptyBorder(0, 20, 0, 20));
+
 
         panel.add(createLabel("Name:"));
         customerNameField = new JTextField();
