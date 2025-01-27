@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.Date;
 
 import controller.CustomerController;
+import model.CustomerData;
 
 public class CustomerView {
     private JPanel panel;
@@ -16,11 +17,14 @@ public class CustomerView {
     private JTextField emailField;
     private JTextField phoneField;
     private JButton submitButton;
-    private final CustomerController customerController;
+    private CustomerController customerController;
 
-    public CustomerView(CustomerController customerController) {
-        this.customerController = customerController;
+    public CustomerView() {
         panel = createCustomerFormPanel();
+    }
+
+    public void setController(CustomerController customerController) {
+        this.customerController = customerController;
     }
 
     public JPanel getPanel() {
@@ -100,6 +104,4 @@ public class CustomerView {
         phoneField.setEnabled(false);
         submitButton.setEnabled(false);
     }
-
-
 }

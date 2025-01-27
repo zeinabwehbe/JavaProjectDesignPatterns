@@ -2,15 +2,18 @@ package controller;
 
 import model.Cart;
 import model.CustomerData;
+import view.CartView;
 import model.ProductData;
 
 import java.util.List;
 
 public class CartController {
     private final Cart cart;
+    private CartView cartView;
 
-    public CartController(CustomerData customer) {
-        this.cart = new Cart();
+    public CartController(CustomerData customer, Cart cart, CartView cartView) {
+        this.cart = cart;
+        this.cartView = cartView;
     }
 
     public List<ProductData> getCart() {
@@ -19,5 +22,15 @@ public class CartController {
 
     public double getTotal() {
         return cart.getCartItems().stream().mapToDouble(ProductData::getPrice).sum();
+    }
+
+    public void updateCart() {
+        if (cartView != null) {
+            cartView.updateCartTable();
+        }
+    }
+
+    public void setCartView(CartView cartView) {
+        this.cartView = cartView;
     }
 }

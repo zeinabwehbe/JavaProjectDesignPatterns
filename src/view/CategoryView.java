@@ -1,18 +1,19 @@
 package view;
 
+import controller.CategoryController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import controller.CategoryController;
 
 public class CategoryView {
+    private final CategoryController categoryController;
     private JPanel panel;
     private JTextField categoryIdField;
     private JTextField categoryNameField;
     private JButton addCategoryButton;
     private JTextArea displayArea;
-    private CategoryController categoryController;
 
     public CategoryView(CategoryController categoryController) {
         this.categoryController = categoryController;

@@ -2,6 +2,7 @@ import controller.CartController;
 import controller.CustomerController;
 import controller.ProductController;
 import model.CustomerData;
+import model.Cart;
 import view.CartView;
 import view.CustomerView;
 import view.ProductView;
@@ -23,16 +24,17 @@ public class ShoppingApplicationUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
 
-        customerController = new CustomerController();
-        customerView = new CustomerView(customerController);
+        CustomerData customerData = new CustomerData();
+        customerView = new CustomerView();
+        customerController = new CustomerController(customerData, customerView);
+
+        frame.setContentPane(customerView.getPanel());
 
         initializeCustomerInfoUI();
         frame.setVisible(true);
     }
 
     private void initializeCustomerInfoUI() {
-        frame.add(customerView.getPanel(), BorderLayout.NORTH);
-
         continueButton = createContinueButton();
         frame.add(continueButton, BorderLayout.SOUTH);
     }
@@ -58,19 +60,19 @@ public class ShoppingApplicationUI {
             return;
         }
 
-        cartController = new CartController(customer);
-        productController = new ProductController(cartController.getCart());
-        isCustomerInfoSubmitted = true;
-
+        Cart cart = new Cart(); cartController = new CartController(customer, cart, null);
+        // Temporary initialization of CartView as null
+        CartView cartView = new CartView(cartController);
+        // Initialize CartView with
+        cartController = new CartController(customer, cart, cartView);
+        // Update cartController with cartView
+        productController = new ProductController(cartController.getCart()); isCustomerInfoSubmitted = true;
         // Remove customerView and continueButton from the frame
-        frame.remove(customerView.getPanel());
-        frame.remove(continueButton);
-
-        addProductAndCartViews();
+        frame.remove(customerView.getPanel()); frame.remove(continueButton);
+        addProductAndCartViews(cartView);
     }
 
-    private void addProductAndCartViews() {
-        CartView cartView = new CartView(cartController);
+    private void addProductAndCartViews(CartView cartView) {
         ProductView productView = new ProductView(productController, cartView);
 
         frame.add(productView.getPanel(), BorderLayout.NORTH);
@@ -81,6 +83,6 @@ public class ShoppingApplicationUI {
     }
 
     public static void main(String[] args) {
-        new ShoppingApplicationUI();
+        SwingUtilities.invokeLater(() -> new ShoppingApplicationUI());
     }
 }

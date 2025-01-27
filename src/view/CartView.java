@@ -7,13 +7,12 @@ import java.util.List;
 import model.ProductData;
 import controller.CartController;
 
-
 public class CartView {
     private JPanel panel;
     private DefaultTableModel tableModel;
     private JTable cartTable;
     private JLabel totalLabel;
-    private CartController cartController;
+    private final CartController cartController;
 
     public CartView(CartController cartController) {
         this.cartController = cartController;
@@ -65,7 +64,7 @@ public class CartView {
     }
 
     public void updateCartTable() {
-        List<ProductData> cartItems = cartController.getCart() ;
+        List<ProductData> cartItems = cartController.getCart();
         tableModel.setRowCount(0);
 
         for (ProductData product : cartItems) {
@@ -78,10 +77,12 @@ public class CartView {
             };
             tableModel.addRow(row);
         }
+
+        double total = cartController.getTotal();
+        totalLabel.setText("Total: $" + String.format("%.2f", total));
     }
 
     private void checkout() {
-        double total = cartController.getTotal();
-        totalLabel.setText("Total: $" + String.format("%.2f", total));
+        cartController.updateCart();
     }
 }
