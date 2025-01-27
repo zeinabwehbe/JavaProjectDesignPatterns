@@ -60,27 +60,30 @@ public class ShoppingApplicationUI {
             return;
         }
 
-        Cart cart = new Cart(); cartController = new CartController(customer, cart, null);
-        // Temporary initialization of CartView as null
-        CartView cartView = new CartView(cartController);
-        // Initialize CartView with
-        cartController = new CartController(customer, cart, cartView);
-        // Update cartController with cartView
-        productController = new ProductController(cartController.getCart()); isCustomerInfoSubmitted = true;
+        Cart cart = new Cart();
+        cartController = new CartController(customer, cart, null); // Initialize without CartView first
+        CartView cartView = new CartView(cartController); // Create CartView with cartController
+        cartController.setCartView(cartView); // Update cartController with cartView
+        ProductView productView = new ProductView(null, cartView); // Temporary initialization, will be updated in ProductController
+        productController = new ProductController(cart, productView); // Initialize ProductController with Cart and ProductView
+        productView.setProductController(productController); // Update ProductView with ProductController
+        isCustomerInfoSubmitted = true;
+
         // Remove customerView and continueButton from the frame
-        frame.remove(customerView.getPanel()); frame.remove(continueButton);
-        addProductAndCartViews(cartView);
+        frame.remove(customerView.getPanel());
+        frame.remove(continueButton);
+
+        addProductAndCartViews(productView, cartView);
     }
 
-    private void addProductAndCartViews(CartView cartView) {
-        ProductView productView = new ProductView(productController, cartView);
-
+    private void addProductAndCartViews(ProductView productView, CartView cartView) {
         frame.add(productView.getPanel(), BorderLayout.NORTH);
         frame.add(cartView.getPanel(), BorderLayout.CENTER);
 
         frame.revalidate();
         frame.repaint();
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new ShoppingApplicationUI());

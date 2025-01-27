@@ -12,7 +12,7 @@ import strategy.RegularPriceStrategy;
 public class ProductView {
     private JPanel panel;
     private ProductController productController;
-    private CartView cartView;
+    private final CartView cartView;
 
     public ProductView(ProductController productController, CartView cartView) {
         this.productController = productController;
@@ -102,5 +102,13 @@ public class ProductView {
         button.setForeground(Color.WHITE);
         button.setFont(new Font("Arial", Font.BOLD, 12));
         return button;
+    }
+
+    public void setProductController(ProductController productController) {
+        this.productController = productController;
+    }
+
+    public void updateCartTable() {
+        cartView.updateCartTable();
     }
 }
