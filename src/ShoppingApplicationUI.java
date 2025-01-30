@@ -2,7 +2,6 @@ import controller.CartController;
 import controller.CategoryController;
 import controller.CustomerController;
 import controller.ProductController;
-import model.CategoryData;
 import model.CustomerData;
 import model.Cart;
 import view.CartView;
@@ -10,12 +9,8 @@ import view.CategoryView;
 import view.CustomerView;
 import view.ProductView;
 
-import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class ShoppingApplicationUI {
     private final JFrame frame;

@@ -2,6 +2,40 @@ package model;
 
 import java.sql.Date;
 
+/*
+* public class CustomerData
+{
+    private String customer_username;
+    private String customer_password;
+    private String customer_gender;
+    private Date date;
+
+    public CustomerData(String customer_username, String customer_password, String customer_gender, Date date) {
+        this.customer_username = customer_username;
+        this.customer_password = customer_password;
+        this.customer_gender = customer_gender;
+        this.date = date;
+    }
+
+    public String getCustomer_username() {
+        return customer_username;
+    }
+
+    public String getCustomer_password() {
+        return customer_password;
+    }
+
+    public String getCustomer_gender() {
+        return customer_gender;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+}
+*/
+
+
 public class CustomerData {
     private String customer_username;
     private String customer_password;
