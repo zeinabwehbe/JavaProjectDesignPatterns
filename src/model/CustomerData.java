@@ -1,41 +1,7 @@
 package model;
 
-import java.sql.Date;
-
-/*
-* public class CustomerData
-{
-    private String customer_username;
-    private String customer_password;
-    private String customer_gender;
-    private Date date;
-
-    public CustomerData(String customer_username, String customer_password, String customer_gender, Date date) {
-        this.customer_username = customer_username;
-        this.customer_password = customer_password;
-        this.customer_gender = customer_gender;
-        this.date = date;
-    }
-
-    public String getCustomer_username() {
-        return customer_username;
-    }
-
-    public String getCustomer_password() {
-        return customer_password;
-    }
-
-    public String getCustomer_gender() {
-        return customer_gender;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-}
-*/
-
-
+import java.util.Date;
+//Remove the constructor and add a private constructor to enforce the use of the builder.
 public class CustomerData {
     private String customer_username;
     private String customer_password;
@@ -43,17 +9,11 @@ public class CustomerData {
     private Date date;
     private String email;
     private String phoneNumber;
-    private Object password;
 
-    public CustomerData() {
-        this.customer_username = customer_username;
-        this.customer_password = customer_password;
-        this.customer_gender = customer_gender;
-        this.date = date;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-    }
+    // Private constructor to enforce the use of the builder
+    private CustomerData() {}
 
+    // Getters and Setters
     public String getCustomer_username() {
         return customer_username;
     }
@@ -76,6 +36,14 @@ public class CustomerData {
 
     public void setCustomer_gender(String customer_gender) {
         this.customer_gender = customer_gender;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getEmail() {
@@ -106,5 +74,46 @@ public class CustomerData {
                 '}';
     }
 
+    // Builder class
+    public static class CustomerDataBuilder {
+        private final CustomerData customerData;
 
+        public CustomerDataBuilder() {
+            this.customerData = new CustomerData();
+        }
+
+        public CustomerDataBuilder setCustomerUsername(String username) {
+            customerData.setCustomer_username(username);
+            return this;
+        }
+
+        public CustomerDataBuilder setCustomerPassword(String password) {
+            customerData.setCustomer_password(password);
+            return this;
+        }
+
+        public CustomerDataBuilder setCustomerGender(String gender) {
+            customerData.setCustomer_gender(gender);
+            return this;
+        }
+
+        public CustomerDataBuilder setDate(Date date) {
+            customerData.setDate(date);
+            return this;
+        }
+
+        public CustomerDataBuilder setEmail(String email) {
+            customerData.setEmail(email);
+            return this;
+        }
+
+        public CustomerDataBuilder setPhoneNumber(String phoneNumber) {
+            customerData.setPhoneNumber(phoneNumber);
+            return this;
+        }
+
+        public CustomerData build() {
+            return customerData;
+        }
+    }
 }

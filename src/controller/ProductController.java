@@ -9,13 +9,25 @@ import view.ProductView;
 import java.util.List;
 
 public class ProductController {
+    //~ ----------------------------------------------------------------------------------------------------------------
+    //~ Instance fields
+    //~ ----------------------------------------------------------------------------------------------------------------
+
     private final Cart cart;
     private final ProductView productView;
+
+    //~ ----------------------------------------------------------------------------------------------------------------
+    //~ Constructors
+    //~ ----------------------------------------------------------------------------------------------------------------
 
     public ProductController(Cart cart, ProductView productView) {
         this.cart = cart;
         this.productView = productView;
     }
+
+    //~ ----------------------------------------------------------------------------------------------------------------
+    //~ Methods
+    //~ ----------------------------------------------------------------------------------------------------------------
 
     public void addProduct(String productId, String category, String name, String status, double price, PricingStrategy pricingStrategy) {
         ProductData product = ProductFactory.createProduct(productId, category, name, status, null, price, pricingStrategy);

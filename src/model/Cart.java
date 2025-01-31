@@ -21,17 +21,25 @@ import java.util.List;
 }
 */
 public class Cart {
-    private final List<ProductData> cartItems;
+    private final List<ProductData> items;
 
     public Cart() {
-        cartItems = new ArrayList<>();
+        this.items = new ArrayList<>();
     }
 
     public void addProduct(ProductData product) {
-        cartItems.add(product);
+        items.add(product);
     }
 
     public List<ProductData> getCartItems() {
-        return cartItems;
+        return items;
+    }
+
+    public double calculateTotal() {
+        double total = 0.0;
+        for (ProductData product : items) {
+            total += product.getPrice();
+        }
+        return total;
     }
 }

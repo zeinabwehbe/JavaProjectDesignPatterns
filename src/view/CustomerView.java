@@ -11,7 +11,7 @@ import controller.CustomerController;
 import model.CustomerData;
 
 public class CustomerView {
-    private JPanel panel;
+    private final JPanel panel;
     private JTextField customerNameField;
     private JTextField customerPasswordField;
     private JTextField customerGenderField;

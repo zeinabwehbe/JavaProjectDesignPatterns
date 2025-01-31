@@ -8,12 +8,29 @@ import model.ProductData;
 import java.util.List;
 
 public class CartController {
+    //~ ----------------------------------------------------------------------------------------------------------------
+    //~ Instance fields
+    //~ ----------------------------------------------------------------------------------------------------------------
+
     private final Cart cart;
     private CartView cartView;
+
+    //~ ----------------------------------------------------------------------------------------------------------------
+    //~ Constructors
+    //~ ----------------------------------------------------------------------------------------------------------------
 
     public CartController(CustomerData customer, Cart cart, CartView cartView) {
         this.cart = cart;
         this.cartView = cartView;
+    }
+
+    //~ ----------------------------------------------------------------------------------------------------------------
+    //~ Methods
+    //~ ----------------------------------------------------------------------------------------------------------------
+
+
+    public void addProduct(ProductData product) {
+        cart.addProduct(product);
     }
 
     public List<ProductData> getCart() {
@@ -21,16 +38,17 @@ public class CartController {
     }
 
     public double getTotal() {
-        return cart.getCartItems().stream().mapToDouble(ProductData::getPrice).sum();
-    }
-
-    public void updateCart() {
-        if (cartView != null) {
-            cartView.updateCartTable();
-        }
+        return cart.calculateTotal();
     }
 
     public void setCartView(CartView cartView) {
         this.cartView = cartView;
+    }
+
+    public void updateCart() {
+        // This method can be used to notify the view of changes (if needed)
+        if (cartView != null) {
+            cartView.updateCartTable();
+        }
     }
 }
