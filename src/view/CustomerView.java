@@ -109,5 +109,7 @@ public class CustomerView {
         emailField.setEnabled(false);
         phoneField.setEnabled(false);
         submitButton.setEnabled(false);
+        ShoppingApplicationView.continueButton.setEnabled(true);
+
     }
 }

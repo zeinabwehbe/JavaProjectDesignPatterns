@@ -69,9 +69,14 @@ public class CartView {
     }
 
     private void checkout() {
-        // Update the cart table and total when the Checkout button is pressed
+        // Update the cart table when the Checkout button is pressed
         updateCartTable();
-        JOptionPane.showMessageDialog(panel, "Checkout completed! Total: $" + String.format("%.2f", cartController.getTotal()));
+
+        // Update the total label
+        double total = cartController.getTotal();
+        totalLabel.setText("Total: $" + String.format("%.2f", total));
+
+        JOptionPane.showMessageDialog(panel, "Checkout completed! Total: $" + String.format("%.2f", total));
     }
 
     public void updateCartTable() {
@@ -92,9 +97,5 @@ public class CartView {
             };
             tableModel.addRow(row);
         }
-
-        // Update the total label
-        double total = cartController.getTotal();
-        totalLabel.setText("Total: $" + String.format("%.2f", total));
     }
 }
