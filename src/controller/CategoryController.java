@@ -1,38 +1,22 @@
 package controller;
 
 import model.CategoryData;
-import view.CategoryView;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CategoryController {
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Instance fields
-    //~ ----------------------------------------------------------------------------------------------------------------
-    private final List<CategoryData> categories;
-    private CategoryView categoryView;
+    private final List<CategoryData> categories = new ArrayList<>();
+    private Consumer<List<CategoryData>> categoryUpdateListener;
 
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Constructors
-    //~ ----------------------------------------------------------------------------------------------------------------
-
-    public CategoryController() {
-        this.categories = CategoryData.getStaticCategories();
+    public void setCategoryUpdateListener(Consumer<List<CategoryData>> listener) {
+        this.categoryUpdateListener = listener;
     }
 
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Methods
-    //~ ----------------------------------------------------------------------------------------------------------------
-
-    public void setCategoryView(CategoryView categoryView) {
-        this.categoryView = categoryView;
-    }
-
-    public void addCategory(String categoryId, String categoryName) {
-        CategoryData category = new CategoryData(categoryId, categoryName);
-        categories.add(category);
-        if (categoryView != null) {
-            categoryView.updateDropdown();
+    public void addCategory(String id, String name) {
+        categories.add(new CategoryData(id, name));
+        if (categoryUpdateListener != null) {
+            categoryUpdateListener.accept(categories);
         }
     }
 

@@ -3,7 +3,10 @@ package view;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.List;
+
+import model.Cart;
 import model.ProductData;
 import controller.CartController;
 
@@ -12,81 +15,92 @@ public class CartView {
     private DefaultTableModel tableModel;
     private JTable cartTable;
     private JLabel totalLabel;
-    private final CartController cartController;
+    private CartController cartController;
 
-    public CartView(CartController cartController) {
-        this.cartController = cartController;
+    // Constructor
+    public CartView() {
         initializeUI();
+    }
+
+    // Setter to inject CartController
+    public void setCartController(CartController cartController) {
+        this.cartController = cartController;
     }
 
     public JPanel getPanel() {
         return panel;
     }
 
+    // Initialize UI components
     private void initializeUI() {
         panel = new JPanel(new BorderLayout());
+        tableModel = createTableModel();
+        cartTable = createCartTable();
 
-        // Initialize the table
-        String[] columnNames = {"Product ID", "Category", "Name", "Status", "Price"};
-        tableModel = new DefaultTableModel(columnNames, 0);
-        cartTable = new JTable(tableModel);
-        cartTable.setFont(new Font("Arial", Font.PLAIN, 14));
-        cartTable.setRowHeight(20);
-        cartTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        cartTable.getTableHeader().setBackground(new Color(100, 149, 237));
-        cartTable.getTableHeader().setForeground(Color.WHITE);
-
-        // Add the table to a scroll pane
         JScrollPane scrollPane = new JScrollPane(cartTable);
         scrollPane.setPreferredSize(new Dimension(780, 200));
 
-        // Create a panel for the table
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Create a panel for the checkout button and total label
-        JPanel checkoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton checkoutButton = createButton();
-        checkoutButton.addActionListener(e -> checkout());
-        checkoutPanel.add(checkoutButton);
+        JPanel checkoutPanel = createCheckoutPanel();
 
-        // Initialize the total label to $0.00
-        totalLabel = new JLabel("Total: $0.00");
-        totalLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        checkoutPanel.add(totalLabel);
-
-        // Add the table panel and checkout panel to the main panel
         panel.add(tablePanel, BorderLayout.CENTER);
         panel.add(checkoutPanel, BorderLayout.SOUTH);
     }
 
-    private JButton createButton() {
-        JButton button = new JButton("Checkout");
-        button.setBackground(new Color(100, 149, 237));
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.BOLD, 12));
-        return button;
+    // Creates the table model for the cart
+    private DefaultTableModel createTableModel() {
+        String[] columnNames = {"Product ID", "Category", "Name", "Status", "Price"};
+        return new DefaultTableModel(columnNames, 0);
+    }
+
+    // Creates and configures the JTable for displaying cart items
+    private JTable createCartTable() {
+        JTable table = new JTable(tableModel);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
+        table.setRowHeight(20);
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        table.getTableHeader().setBackground(new Color(100, 149, 237));
+        table.getTableHeader().setForeground(Color.WHITE);
+        return table;
+    }
+
+    private JPanel createCheckoutPanel() {
+        JPanel checkoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        JButton checkoutButton = createButton("Checkout", e -> checkout());
+        checkoutPanel.add(checkoutButton);
+
+        totalLabel = new JLabel("Total: $0.00");
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        checkoutPanel.add(totalLabel);
+
+        return checkoutPanel;
     }
 
     private void checkout() {
-        // Update the cart table when the Checkout button is pressed
-        updateCartTable();
-
-        // Update the total label
-        double total = cartController.getTotal();
-        totalLabel.setText("Total: $" + String.format("%.2f", total));
-
-        JOptionPane.showMessageDialog(panel, "Checkout completed! Total: $" + String.format("%.2f", total));
+        // Ensure the cartController is not null before using it
+        if (cartController != null) {
+            cartController.updateCartTable(this);
+        } else {
+            System.out.println("Error: CartController is null");
+        }
     }
 
-    public void updateCartTable() {
-        // Clear the table
-        tableModel.setRowCount(0);
+    private JButton createButton(String text, ActionListener actionListener) {
+        JButton button = new JButton(text);
+        button.setBackground(new Color(100, 149, 237));
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Arial", Font.BOLD, 12));
+        button.addActionListener(actionListener);
+        return button;
+    }
 
-        // Get the cart items from the controller
-        List<ProductData> cartItems = cartController.getCart();
 
-        // Add each item to the table
+    public void updateCartTable(List<ProductData> cartItems) {
+        tableModel.setRowCount(0); // Clear the table
+
         for (ProductData product : cartItems) {
             Object[] row = {
                     product.getProductId(),
@@ -98,4 +112,9 @@ public class CartView {
             tableModel.addRow(row);
         }
     }
+    // Method to update the total label in the CartView
+    public void updateTotalLabel(double total) {
+        totalLabel.setText("Total: $" + String.format("%.2f", total));
+    }
+
 }

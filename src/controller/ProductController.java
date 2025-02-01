@@ -4,35 +4,31 @@ import factory.ProductFactory;
 import model.ProductData;
 import model.Cart;
 import strategy.PricingStrategy;
-import view.ProductView;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ProductController {
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Instance fields
-    //~ ----------------------------------------------------------------------------------------------------------------
-
     private final Cart cart;
-    private final ProductView productView;
+    private Consumer<List<ProductData>> cartUpdateListener;
 
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Constructors
-    //~ ----------------------------------------------------------------------------------------------------------------
-
-    public ProductController(Cart cart, ProductView productView) {
+    public ProductController(Cart cart) {
         this.cart = cart;
-        this.productView = productView;
     }
 
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Methods
-    //~ ----------------------------------------------------------------------------------------------------------------
+    // Attach a listener that the view can use to get updates when the cart changes
+    public void setCartUpdateListener(Consumer<List<ProductData>> listener) {
+        this.cartUpdateListener = listener;
+    }
 
     public void addProduct(String productId, String category, String name, String status, double price, PricingStrategy pricingStrategy) {
         ProductData product = ProductFactory.createProduct(productId, category, name, status, null, price, pricingStrategy);
         cart.addProduct(product); // Add the product to the cart
-        productView.updateCartTable(); // Refresh the cart view to display the added product
+
+        // Notify the view about the updated cart
+        if (cartUpdateListener != null) {
+            cartUpdateListener.accept(cart.getCartItems());
+        }
     }
 
     public List<ProductData> getCart() {

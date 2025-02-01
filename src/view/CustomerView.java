@@ -3,12 +3,7 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
-
-import controller.CustomerController;
-import model.CustomerData;
 
 public class CustomerView {
     private final JPanel panel;
@@ -18,14 +13,9 @@ public class CustomerView {
     private JTextField emailField;
     private JTextField phoneField;
     private JButton submitButton;
-    private CustomerController customerController;
 
     public CustomerView() {
         panel = createCustomerFormPanel();
-    }
-
-    public void setController(CustomerController customerController) {
-        this.customerController = customerController;
     }
 
     public JPanel getPanel() {
@@ -34,12 +24,9 @@ public class CustomerView {
 
     private JPanel createCustomerFormPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(28, 2, 0, 0));
+        panel.setLayout(new GridLayout(6, 2, 5, 5));
         panel.setBackground(new Color(240, 240, 240));
-
-        // Add margins to the left and right
-        panel.setBorder(new EmptyBorder(0, 20, 0, 20));
-
+        panel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
         panel.add(createLabel("Name:"));
         customerNameField = new JTextField();
@@ -61,13 +48,7 @@ public class CustomerView {
         phoneField = new JTextField();
         panel.add(phoneField);
 
-        submitButton = createButton();
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                submitCustomerData();
-            }
-        });
+        submitButton = createButton("Submit");
         panel.add(submitButton);
 
         return panel;
@@ -79,37 +60,49 @@ public class CustomerView {
         return label;
     }
 
-    private JButton createButton() {
-        JButton button = new JButton("Submit");
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
         button.setBackground(new Color(100, 149, 237));
         button.setForeground(Color.WHITE);
         button.setFont(new Font("Arial", Font.BOLD, 12));
         return button;
     }
 
-    private void submitCustomerData() {
-        String name = customerNameField.getText();
-        String password = customerPasswordField.getText();
-        String gender = customerGenderField.getText();
-        String email = emailField.getText();
-        String phone = phoneField.getText();
+    // **Expose a method to attach an external action listener (Decoupling from controllers)**
+    public void addSubmitListener(ActionListener listener) {
+        submitButton.addActionListener(listener);
+    }
 
-        if (name.isEmpty() || password.isEmpty() || gender.isEmpty() || email.isEmpty() || phone.isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "All fields must be filled out!");
-            return;
-        }
+    public String getCustomerName() {
+        return customerNameField.getText();
+    }
 
-        Date currentDate = new Date(System.currentTimeMillis());
-        customerController.setCustomerData(name, password, gender, email, phone, currentDate);
+    public String getCustomerPassword() {
+        return customerPasswordField.getText();
+    }
 
-        // Disable fields after submission
+    public String getCustomerGender() {
+        return customerGenderField.getText();
+    }
+
+    public String getEmail() {
+        return emailField.getText();
+    }
+
+    public String getPhone() {
+        return phoneField.getText();
+    }
+
+    public void disableInputs() {
         customerNameField.setEnabled(false);
         customerPasswordField.setEnabled(false);
         customerGenderField.setEnabled(false);
         emailField.setEnabled(false);
         phoneField.setEnabled(false);
         submitButton.setEnabled(false);
-        ShoppingApplicationView.continueButton.setEnabled(true);
+    }
 
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(panel, message);
     }
 }

@@ -1,7 +1,7 @@
 package model;
 
 import java.util.Date;
-//Remove the constructor and add a private constructor to enforce the use of the builder.
+
 public class CustomerData {
     private String customer_username;
     private String customer_password;
@@ -11,7 +11,7 @@ public class CustomerData {
     private String phoneNumber;
 
     // Private constructor to enforce the use of the builder
-    private CustomerData() {}
+    public CustomerData() {}
 
     // Getters and Setters
     public String getCustomer_username() {
@@ -72,6 +72,16 @@ public class CustomerData {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
+    }
+
+    // Set customer data using the builder pattern
+    public void setCustomerData(CustomerData customerData) {
+        this.customer_username = customerData.getCustomer_username();
+        this.customer_password = customerData.getCustomer_password();
+        this.customer_gender = customerData.getCustomer_gender();
+        this.date = customerData.getDate();
+        this.email = customerData.getEmail();
+        this.phoneNumber = customerData.getPhoneNumber();
     }
 
     // Builder class

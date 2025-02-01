@@ -1,52 +1,44 @@
 package controller;
 
 import model.CustomerData;
-import view.CustomerView;
 
-import java.util.Date;
+import java.util.function.Consumer;
 
 public class CustomerController {
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Instance fields
-    //~ ----------------------------------------------------------------------------------------------------------------
+    private final CustomerData model;
+    private Consumer<Boolean> formSubmissionListener;
 
-    private final CustomerData customer;
-    private final CustomerView view;
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Constructors
-    //~ ----------------------------------------------------------------------------------------------------------------
-
-
-    public CustomerController(CustomerData customer, CustomerView view) {
-        this.customer = customer;
-        this.view = view;
-        this.view.setController(this);
+    public CustomerController(CustomerData model) {
+        this.model = model;
     }
 
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Methods
-    //~ ----------------------------------------------------------------------------------------------------------------
+    public void setFormSubmissionListener(Consumer<Boolean> listener) {
+        this.formSubmissionListener = listener;
+    }
 
-    public void setCustomerData(String name, String password, String gender, String email, String phone, Date date) {
+    public void submitCustomerData(String name, String password, String gender, String email, String phone) {
+        if (name.isEmpty() || password.isEmpty() || gender.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            if (formSubmissionListener != null) {
+                formSubmissionListener.accept(false);
+            }
+            return;
+        }
+
+        // Using the builder pattern to set customer data
         CustomerData customerData = new CustomerData.CustomerDataBuilder()
                 .setCustomerUsername(name)
                 .setCustomerPassword(password)
                 .setCustomerGender(gender)
                 .setEmail(email)
                 .setPhoneNumber(phone)
-                .setDate(date)
+                .setDate(new java.util.Date()) // Set the current date
                 .build();
 
-        // Update the customer object
-        this.customer.setCustomer_username(customerData.getCustomer_username());
-        this.customer.setCustomer_password(customerData.getCustomer_password());
-        this.customer.setCustomer_gender(customerData.getCustomer_gender());
-        this.customer.setEmail(customerData.getEmail());
-        this.customer.setPhoneNumber(customerData.getPhoneNumber());
-        this.customer.setDate(customerData.getDate());
-    }
+        // Set the built CustomerData in the model
+        model.setCustomerData(customerData);
 
-    public CustomerData getCustomer() {
-        return customer;
+        if (formSubmissionListener != null) {
+            formSubmissionListener.accept(true);
+        }
     }
 }

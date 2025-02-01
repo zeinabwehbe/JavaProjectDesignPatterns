@@ -1,36 +1,17 @@
 package controller;
 
 import model.Cart;
-import model.CustomerData;
-import view.CartView;
 import model.ProductData;
+import view.CartView; // Make sure CartView is imported
 
 import java.util.List;
 
 public class CartController {
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Instance fields
-    //~ ----------------------------------------------------------------------------------------------------------------
-
     private final Cart cart;
-    private CartView cartView;
 
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Constructors
-    //~ ----------------------------------------------------------------------------------------------------------------
-
-    public CartController(CustomerData customer, Cart cart, CartView cartView) {
+    // Constructor doesn't require CartView parameter now
+    public CartController(Cart cart) {
         this.cart = cart;
-        this.cartView = cartView;
-    }
-
-    //~ ----------------------------------------------------------------------------------------------------------------
-    //~ Methods
-    //~ ----------------------------------------------------------------------------------------------------------------
-
-
-    public void addProduct(ProductData product) {
-        cart.addProduct(product);
     }
 
     public List<ProductData> getCart() {
@@ -38,17 +19,17 @@ public class CartController {
     }
 
     public double getTotal() {
-        return cart.calculateTotal();
+
+            double total = 0.0;
+            for (ProductData product : cart.getCartItems()) {
+                total += product.getPrice();
+            }
+            return total;
     }
 
-    public void setCartView(CartView cartView) {
-        this.cartView = cartView;
-    }
-
-    public void updateCart() {
-        // This method can be used to notify the view of changes (if needed)
-        if (cartView != null) {
-            cartView.updateCartTable();
-        }
+    // Method to update CartView's table and total label
+    public void updateCartTable(CartView cartView) {
+        cartView.updateCartTable(getCart());  // Pass the cart items to the view
+        cartView.updateTotalLabel(getTotal()); // Update total in the view
     }
 }
