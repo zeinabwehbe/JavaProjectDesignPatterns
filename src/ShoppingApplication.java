@@ -31,10 +31,6 @@ public class ShoppingApplication {
             CartView cartView = new CartView();  // Now CartView is created here
             cartView.setCartController(cartController); // Set the controller
 
-            CustomerController customerController = new CustomerController(customerModel, customerView);
-            ProductController productController = new ProductController(cart,productView, cartView);
-
-
             // -------------------- Set up the main frame --------------------
             JFrame frame = new JFrame("Shopping Application");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

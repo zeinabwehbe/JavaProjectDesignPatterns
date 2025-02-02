@@ -6,14 +6,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import model.Cart;
 import model.ProductData;
 import controller.CartController;
 
 public class CartView {
     private JPanel panel;
     private DefaultTableModel tableModel;
-    private JTable cartTable;
     private JLabel totalLabel;
     private CartController cartController;
 
@@ -35,7 +33,7 @@ public class CartView {
     private void initializeUI() {
         panel = new JPanel(new BorderLayout());
         tableModel = createTableModel();
-        cartTable = createCartTable();
+        JTable cartTable = createCartTable();
 
         JScrollPane scrollPane = new JScrollPane(cartTable);
         scrollPane.setPreferredSize(new Dimension(780, 200));
@@ -69,7 +67,7 @@ public class CartView {
     private JPanel createCheckoutPanel() {
         JPanel checkoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        JButton checkoutButton = createButton("Checkout", e -> checkout());
+        JButton checkoutButton = createButton(_ -> checkout());
         checkoutPanel.add(checkoutButton);
 
         totalLabel = new JLabel("Total: $0.00");
@@ -88,8 +86,8 @@ public class CartView {
         }
     }
 
-    private JButton createButton(String text, ActionListener actionListener) {
-        JButton button = new JButton(text);
+    private JButton createButton(ActionListener actionListener) {
+        JButton button = new JButton("Checkout");
         button.setBackground(new Color(100, 149, 237));
         button.setForeground(Color.WHITE);
         button.setFont(new Font("Arial", Font.BOLD, 12));

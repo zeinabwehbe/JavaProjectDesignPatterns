@@ -16,13 +16,12 @@ import java.util.function.Consumer;
 public class ProductController {
     private final Cart cart;
     private final ProductView productView;
-    private final CartView cartView; // Added CartView reference
     private Consumer<List<ProductData>> cartUpdateListener;
 
     public ProductController(Cart cart, ProductView productView, CartView cartView) {
         this.cart = cart;
         this.productView = productView;
-        this.cartView = cartView; // Initialize cartView
+        // Added CartView reference
         attachListeners();
 
         // Ensure cartView updates when the cart changes
@@ -30,7 +29,7 @@ public class ProductController {
     }
 
     private void attachListeners() {
-        productView.addProductListener(e -> handleProductAddition());
+        productView.addProductListener(_ -> handleProductAddition());
     }
 
     private void handleProductAddition() {
@@ -60,10 +59,6 @@ public class ProductController {
         if (cartUpdateListener != null) {
             cartUpdateListener.accept(cart.getCartItems());
         }
-    }
-
-    public List<ProductData> getCart() {
-        return cart.getCartItems();
     }
 
     public void setCartUpdateListener(Consumer<List<ProductData>> listener) {

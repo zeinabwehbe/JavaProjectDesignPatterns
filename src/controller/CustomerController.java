@@ -17,11 +17,7 @@ public class CustomerController {
     }
 
     private void attachListeners() {
-        customerView.addSubmitListener(e -> handleCustomerSubmission());
-    }
-
-    public void setFormSubmissionListener(Consumer<Boolean> listener) {
-        this.formSubmissionListener = listener;
+        customerView.addSubmitListener(_ -> handleCustomerSubmission());
     }
 
     private void handleCustomerSubmission() {
