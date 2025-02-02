@@ -22,7 +22,7 @@ public class CartView {
         initializeUI();
     }
 
-    // Setter to inject CartController
+    // Setter to inject CartController, ONLY TO BE ABLE TO PASS TOTAL
     public void setCartController(CartController cartController) {
         this.cartController = cartController;
     }
@@ -112,6 +112,7 @@ public class CartView {
             tableModel.addRow(row);
         }
     }
+
     // Method to update the total label in the CartView
     public void updateTotalLabel(double total) {
         totalLabel.setText("Total: $" + String.format("%.2f", total));
