@@ -68,4 +68,8 @@ public class ProductData {
                 ", productPrice=" + getPrice() +
                 '}';
     }
+
+    public String getName() {
+        return  productName;
+    }
 }

@@ -6,45 +6,49 @@ import model.Cart;
 import strategy.PricingStrategy;
 import strategy.DiscountPriceStrategy;
 import strategy.RegularPriceStrategy;
+import view.AdminView;
 import view.ProductView;
-import view.CartView;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ProductController {
     private final Cart cart;
     private final ProductView productView;
-    private Consumer<List<ProductData>> cartUpdateListener;
+    private final AdminView adminView;
+    private final List<ProductData> products; // Store all products
+    private Consumer<List<ProductData>> productUpdateListener;
 
-    public ProductController(Cart cart, ProductView productView, CartView cartView) {
+    public ProductController(Cart cart, ProductView productView, AdminView adminView) {
         this.cart = cart;
         this.productView = productView;
-        // Added CartView reference
+        this.adminView = adminView;
+        this.products = new ArrayList<>();
         attachListeners();
-
-        // Ensure cartView updates when the cart changes
-        setCartUpdateListener(cartView::updateCartTable);
     }
 
     private void attachListeners() {
-        productView.addProductListener(_ -> handleProductAddition());
+        // Listener for adding new products from AdminView
+        adminView.addProductListener(e -> handleProductAddition());
+
+        // Listener for adding a selected product to the cart
+        productView.addAddToCartListener(e -> handleAddToCart());
     }
 
     private void handleProductAddition() {
-        String productId = productView.getProductId();
-        String category = productView.getProductCategory();
-        String name = productView.getProductName();
-        String status = productView.getProductStatus();
-        double price = productView.getProductPrice();
+        String productId = adminView.getProductId();
+        String category = adminView.getProductCategory();
+        String name = adminView.getProductName();
+        String status = adminView.getProductStatus();
+        double price = adminView.getProductPrice();
 
         if (price < 0) {
-            JOptionPane.showMessageDialog(null, "Invalid product price!");
             return;
         }
 
-        PricingStrategy pricingStrategy = productView.isDiscountApplied()
+        PricingStrategy pricingStrategy = adminView.isDiscountApplied()
                 ? new DiscountPriceStrategy(0.1)
                 : new RegularPriceStrategy();
 
@@ -53,15 +57,22 @@ public class ProductController {
 
     public void addProduct(String productId, String category, String name, String status, double price, PricingStrategy pricingStrategy) {
         ProductData product = ProductFactory.createProduct(productId, category, name, status, null, price, pricingStrategy);
-        cart.addProduct(product);
+        products.add(product); // Add to the product list
 
-        // Notify the UI that the cart has changed
-        if (cartUpdateListener != null) {
-            cartUpdateListener.accept(cart.getCartItems());
+        if (productUpdateListener != null) {
+            productUpdateListener.accept(products); // Update ProductView
         }
     }
 
-    public void setCartUpdateListener(Consumer<List<ProductData>> listener) {
-        this.cartUpdateListener = listener;
+    private void handleAddToCart() {
+        ProductData selectedProduct = productView.getSelectedProduct();
+        if (selectedProduct != null) {
+            cart.addProduct(selectedProduct);
+            JOptionPane.showMessageDialog(null, selectedProduct.getName() + " added to cart!");
+        }
+    }
+
+    public void setProductUpdateListener(Consumer<List<ProductData>> listener) {
+        this.productUpdateListener = listener;
     }
 }
