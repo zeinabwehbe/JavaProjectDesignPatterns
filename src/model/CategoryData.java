@@ -22,31 +22,39 @@ import java.util.List;
     }
 }
 */
-
+/**
+ * CategoryData class represents a product category.
+ */
 public class CategoryData {
-    private String categoryId;
-    private String categoryName;
+    private final String categoryId;
+    private final String categoryName;
 
+    /**
+     * Constructs a CategoryData instance with specified category ID and name.
+     *
+     * @param categoryId   The unique identifier for the category.
+     * @param categoryName The name of the category.
+     */
     public CategoryData(String categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
     }
 
+    /**
+     * Gets the category ID.
+     *
+     * @return The category ID.
+     */
     public String getCategoryId() {
         return categoryId;
     }
 
+    /**
+     * Gets the category name.
+     *
+     * @return The category name.
+     */
     public String getCategoryName() {
         return categoryName;
-    }
-
-
-    public static List<CategoryData> getStaticCategories() {
-        return Arrays.asList(
-                new CategoryData("1", "Electronics"),
-                new CategoryData("2", "Books"),
-                new CategoryData("3", "Clothing"),
-                new CategoryData("4", "Home & Kitchen")
-        );
     }
 }

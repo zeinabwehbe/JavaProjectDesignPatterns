@@ -5,6 +5,9 @@ import strategy.PricingStrategy;
 
 import java.sql.Blob;
 
+/**
+ * Factory class to create ProductData objects with validation.
+ */
 public class ProductFactory {
     /**
      * Creates a ProductData instance with proper validation.
@@ -52,4 +55,3 @@ public class ProductFactory {
         return new ProductData(productId, productCategory, productName, productStatus, productImage, basePrice, pricingStrategy);
     }
 }
-
